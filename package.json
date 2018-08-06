@@ -1,0 +1,27 @@
+{
+  "name": "info_vis",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.html",
+  "dependencies": {
+    "d3": "^5.5.0",
+    "d3-geo": "^1.10.0",
+    "d3.js": "0.0.2-security",
+    "topojson": "^3.0.2",
+    "world-atlas": "^1.1.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cassianohsilva/info_vis.git"
+  },
+  "author": "Cassiano Honorio da Silva",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cassianohsilva/info_vis/issues"
+  },
+  "homepage": "https://github.com/cassianohsilva/info_vis#readme"
+}
