@@ -8,15 +8,19 @@
 <script src="node_modules/topojson/dist/topojson.min.js"></script>
 <script src="node_modules/d3-geo/dist/d3-geo.min.js"></script>
 
-
-<!-- <script>
-	 var map = new Datamap({element: document.getElementById('svg')});
-</script> -->
-
 <style type="text/css">
 	
-canvas, svg {
+svg {
 	border: 1px solid black;
+}
+
+svg > path {
+	fill: #DDD;
+	stroke: #000;
+}
+
+svg path:hover {
+	fill: lightblue;
 }
 
 </style>
