@@ -1,13 +1,13 @@
 // var context = d3.select("#canvas").node().getContext("2d"),
 var context = d3.select("#canvas");
 var projection = d3.geoNaturalEarth1()
-	.scale(100)
-	.translate([300, 150]);
+	.scale(150)
+	.translate([370, 220]);
 	// .center([0, 5]);
 
 var path = d3.geoPath(projection);
 
-d3.json("https://unpkg.com/world-atlas@1/world/110m.json").then(function(world) {
+d3.json("node_modules/world-atlas/world/110m.json").then(function(world) {
   // context.beginPath();
   // path(topojson.mesh(world));
   // context.stroke();
