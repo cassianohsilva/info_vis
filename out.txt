@@ -1,0 +1,27 @@
+     id                                       name
+20    0           Bolivia (Plurinational State of)
+21    0                                    Bonaire
+30    0                                 Cabo Verde
+35    0                       Central African Rep.
+39    0                       China, Hong Kong SAR
+40    0                           China, Macao SAR
+43    0                                      Congo
+49    0                                 Czech Rep.
+51    0                Dem. People's Rep. of Korea
+52    0                     Dem. Rep. of the Congo
+55    0                             Dominican Rep.
+66    0                                     Gambia
+82    0                     Iran (Islamic Rep. of)
+94    0                     Lao People's Dem. Rep.
+111   0           Micronesia (Federated States of)
+139   0                              Rep. of Korea
+140   0                            Rep. of Moldova
+150   0      Serbia and Kosovo (S/RES/1244 (1999))
+154   0                  Sint Maarten (Dutch part)
+163   0                         State of Palestine
+169   0                           Syrian Arab Rep.
+172   0  The former Yugoslav Republic of Macedonia
+185   0                    United Rep. of Tanzania
+186   0                   United States of America
+190   0         Venezuela (Bolivarian Republic of)
+191   0                                   Viet Nam
