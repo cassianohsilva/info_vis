@@ -9,11 +9,6 @@ var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height);
 
-var linearGradient = svg.append("defs")
-    .append("linearGradient")
-    .attr("id", "linear-gradient")
-    .attr("gradientTransform", "rotate(90)");
-
 var projection = d3.geoNaturalEarth1()
     .scale(150)
     .translate([width / 2, height / 2])
@@ -24,13 +19,17 @@ var graticule = d3.geoGraticule();
 var path = d3.geoPath()
     .projection(projection);
 
-linearGradient.append("stop")
-    .attr("offset", "0%")
-    .attr("stop-color", '#eea29a');
-
-linearGradient.append("stop")
-    .attr("offset", "100%")
-    .attr("stop-color", '#86af49');
+svg.append("svg:defs").append("svg:marker")
+    .attr("id", "triangle")
+    .attr("refX", 6)
+    .attr("refY", 6)
+    .attr("markerWidth", 30)
+    .attr("markerHeight", 30)
+    .attr("markerUnits", "userSpaceOnUse")
+    .attr("orient", "auto")
+    .append("path")
+    .attr("d", "M 0 0 12 6 0 12 3 6")
+    .style("fill", "#d64161");
 
 function initMap() {
 
@@ -112,13 +111,15 @@ function initMap() {
                 })
                     .on('mouseover', function (d, n) {
 
-                        svg.selectAll(`.o${d.id}, .d${d.id}`)
-                            .attr('display', 'block')
+                        // svg.selectAll(`.o${d.id}, .d${d.id}`)
+                        svg.selectAll(`.o${d.id}`)
+                            .attr('display', 'block');
                     }).on('mouseout', function (d, i) {
-                    svg.selectAll(`.o${d.id}, .d${d.id}`)
-                        .attr('display', 'none')
+                    // svg.selectAll(`.o${d.id}, .d${d.id}`)
+                    svg.selectAll(`.o${d.id}`)
+                        .attr('display', 'none');
                 })
-            });
+            })
     })
 }
 
@@ -135,7 +136,7 @@ function showMigration(year) {
         .enter().append("line")
         .attr('d', line)
         .attr('class', function (m) {
-            return `${'y' + year} ${'o' + m.origin} ${'d' + m.country}`
+            return `migration-line y${year} o${m.origin} d${m.country}`
         })
         .attr('x1', function (m) {
             return positions[m.origin][0];
@@ -149,8 +150,9 @@ function showMigration(year) {
         .attr('y2', function (m) {
             return positions[m.country][1];
         })
-        .attr('stroke', "url(#linear-gradient)")
+        .attr('stroke', "#d64161")
         .attr('display', 'none')
+        .attr("marker-end", "url(#triangle)");
 
 
 }

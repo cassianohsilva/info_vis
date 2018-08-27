@@ -38,26 +38,6 @@ svg .country:hover {
     stroke-width: .5px;
 }
 
-/*svg line {*/
-    /*stroke: #b5e7a0;*/
-/*}*/
-
-/*svg {
-    border: 1px solid black;
+.migration-line {
+    pointer-events: none;
 }
-
-svg > path {
-    fill: #DDD;
-    stroke: #000;
-}
-
-svg .boundary:hover {
-    fill: lightblue;
-}
-
-svg .graticule {
-  fill: none;
-  stroke: #777;
-  stroke-width: .5px;
-  stroke-opacity: .5
-}*/
