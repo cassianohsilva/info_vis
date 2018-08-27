@@ -38,6 +38,10 @@ svg .country:hover {
     stroke-width: .5px;
 }
 
+/*svg line {*/
+    /*stroke: #b5e7a0;*/
+/*}*/
+
 /*svg {
     border: 1px solid black;
 }
