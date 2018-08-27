@@ -14,6 +14,16 @@ var linearGradient = svg.append("defs")
     .attr("id", "linear-gradient")
     .attr("gradientTransform", "rotate(90)");
 
+var projection = d3.geoNaturalEarth1()
+    .scale(150)
+    .translate([width / 2, height / 2])
+    .precision(.1);
+
+var graticule = d3.geoGraticule();
+
+var path = d3.geoPath()
+    .projection(projection);
+
 linearGradient.append("stop")
     .attr("offset", "0%")
     .attr("stop-color", '#eea29a');
@@ -23,15 +33,7 @@ linearGradient.append("stop")
     .attr("stop-color", '#86af49');
 
 function initMap() {
-    var projection = d3.geoNaturalEarth1()
-        .scale(150)
-        .translate([width / 2, height / 2])
-        .precision(.1);
 
-    var path = d3.geoPath()
-        .projection(projection);
-
-    var graticule = d3.geoGraticule();
 
     svg.append("defs").append("path")
         .datum({type: "Sphere"})
@@ -102,21 +104,20 @@ function initMap() {
                     })
                     .attr("d", path)
                     .each(function (d, i) {
-                        positions[parseInt(d.id)] = this.getPointAtLength(this.getTotalLength() / 2);
+                        positions[parseInt(d.id)] = path.centroid(d);
                     }).call(function () {
 
                     console.log(svg);
                     showMigration(2016);
-                }).on('mouseover', function (d, n) {
+                })
+                    .on('mouseover', function (d, n) {
 
-                    svg.selectAll(`.o${d.id}, .d${d.id}`)
-                        .attr('display', 'block')
-                }).on('mouseout', function (d, i) {
+                        svg.selectAll(`.o${d.id}, .d${d.id}`)
+                            .attr('display', 'block')
+                    }).on('mouseout', function (d, i) {
                     svg.selectAll(`.o${d.id}, .d${d.id}`)
                         .attr('display', 'none')
                 })
-
-
             });
     })
 }
@@ -137,16 +138,16 @@ function showMigration(year) {
             return `${'y' + year} ${'o' + m.origin} ${'d' + m.country}`
         })
         .attr('x1', function (m) {
-            return positions[m.origin].x;
+            return positions[m.origin][0];
         })
         .attr('y1', function (m) {
-            return positions[m.origin].y
+            return positions[m.origin][1];
         })
         .attr('x2', function (m) {
-            return positions[m.country].x;
+            return positions[m.country][0];
         })
         .attr('y2', function (m) {
-            return positions[m.country].y;
+            return positions[m.country][1];
         })
         .attr('stroke', "url(#linear-gradient)")
         .attr('display', 'none')
