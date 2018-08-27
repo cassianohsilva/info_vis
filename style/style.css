@@ -1,0 +1,59 @@
+svg {
+    border: 1px solid black;
+}
+
+.stroke {
+    fill: none;
+    stroke: #ddd;
+    stroke-width: 3px;
+}
+
+.fill {
+    fill: #fff;
+}
+
+.graticule {
+    fill: none;
+    stroke: #777;
+    stroke-width: .5px;
+    stroke-opacity: .5;
+}
+
+svg .country {
+    fill: #DDD;
+    stroke: #000;
+}
+
+svg .country:hover {
+    fill: lightblue;
+}
+
+.land {
+    fill: #222;
+}
+
+.boundary {
+    fill: none;
+    stroke: #fff;
+    stroke-width: .5px;
+}
+
+/*svg {
+    border: 1px solid black;
+}
+
+svg > path {
+    fill: #DDD;
+    stroke: #000;
+}
+
+svg .boundary:hover {
+    fill: lightblue;
+}
+
+svg .graticule {
+  fill: none;
+  stroke: #777;
+  stroke-width: .5px;
+  stroke-opacity: .5
+}*/
