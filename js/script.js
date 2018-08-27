@@ -3,7 +3,7 @@ var migration = {};
 var positions = {};
 
 var width = 900,
-    height = 600;
+    height = width * 0.47;
 
 var svg = d3.select("body").append("svg")
     .attr("width", width)
