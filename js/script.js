@@ -111,13 +111,55 @@ function initMap() {
                 })
                     .on('mouseover', function (d, n) {
 
-                        // svg.selectAll(`.o${d.id}, .d${d.id}`)
                         svg.selectAll(`.o${d.id}`)
-                            .attr('display', 'block');
+                            .attr('display', 'block')
+                            // .transition()
+                            .attr('x1', function (d) {
+                                return positions[d.origin][0];
+                            })
+                            .attr('y1', function (d) {
+                                return positions[d.origin][1];
+                            })
+                            .attr('x2', function (d) {
+                                return positions[d.origin][0];
+                            })
+                            .attr('y2', function (d) {
+                                return positions[d.origin][1];
+                            })
+                            .transition()
+                            .ease(d3.easeLinear)
+                            .duration(1500)
+                            .attr('x2', function (d) {
+                                return positions[d.country][0];
+                            })
+                            .attr('y2', function (d) {
+                                return positions[d.country][1];
+                            })
+
+                            .transition()
+                            .ease(d3.easeLinear)
+                            .duration(2000)
+                            .attr('x1', function (d) {
+                                return positions[d.country][0];
+                            })
+                            .attr('y1', function (d) {
+                                return positions[d.country][1];
+                            })
+                            .on('end', function (d) {
+                                d3.select(this)
+                                    .attr('display', 'none')
+                                    .attr('x1', function (d) {
+                                        return positions[d.origin][0];
+                                    })
+                                    .attr('y1', function (d) {
+                                        return positions[d.origin][1];
+                                    })
+                            })
                     }).on('mouseout', function (d, i) {
                     // svg.selectAll(`.o${d.id}, .d${d.id}`)
                     svg.selectAll(`.o${d.id}`)
-                        .attr('display', 'none');
+                        .attr('display', 'none')
+                        .interrupt();
                 })
             })
     })
@@ -137,18 +179,6 @@ function showMigration(year) {
         .attr('d', line)
         .attr('class', function (m) {
             return `migration-line y${year} o${m.origin} d${m.country}`
-        })
-        .attr('x1', function (m) {
-            return positions[m.origin][0];
-        })
-        .attr('y1', function (m) {
-            return positions[m.origin][1];
-        })
-        .attr('x2', function (m) {
-            return positions[m.country][0];
-        })
-        .attr('y2', function (m) {
-            return positions[m.country][1];
         })
         .attr('stroke', "#d64161")
         .attr('display', 'none')
