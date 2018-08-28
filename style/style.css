@@ -51,3 +51,9 @@ svg .country:hover {
     fill-opacity: 0.6;
     stroke: black;
 }
+
+.txt-num-refugees {
+    stroke: #000;
+    fill: #000;
+    /*font-size: 100px;*/
+}
