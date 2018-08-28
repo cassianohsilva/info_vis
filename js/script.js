@@ -2,6 +2,8 @@ var countries = {};
 var migration = {};
 var positions = {};
 
+var max_migrations = 0;
+
 var width = 900,
     height = width * 0.47;
 
@@ -87,6 +89,10 @@ function initMap() {
                         migration[data[i].year] = []
                     }
 
+                    if (data[i].value > max_migrations) {
+                        max_migrations = data[i].value;
+                    }
+
                     migration[data[i].year].push(data[i]);
                 }
 
@@ -99,7 +105,7 @@ function initMap() {
                     .enter().append("path")
                     .attr('class', 'country')
                     .attr('id', function (d, n) {
-                        return parseInt(d.id);
+                        return `c${parseInt(d.id)}`;
                     })
                     .attr("d", path)
                     .each(function (d, i) {
@@ -128,12 +134,47 @@ function initMap() {
                             })
                             .transition()
                             .ease(d3.easeLinear)
-                            .duration(1500)
+                            .duration(500)
                             .attr('x2', function (d) {
                                 return positions[d.country][0];
                             })
                             .attr('y2', function (d) {
                                 return positions[d.country][1];
+                            })
+                            .on('end', function (d) {
+
+                                // console.log(d3.select(this).datum());
+
+                                var data = d;
+
+                                // console.log(`#${d.country}`);
+                                if (d.value !== 0) {
+                                    // d3.selectAll(`#c${d.country}`)
+                                    svg
+                                        .append('circle')
+                                        .attr('class', 'num_refugees no-mouse')
+                                        .attr('r', function () {
+
+                                            // console.log(Math.abs(Math.log(Math.abs(data.value) / max_migrations) * 20))
+
+                                            return Math.abs(Math.log(Math.abs(data.value) / max_migrations) * 1.5)
+                                        })
+                                        .attr('cx', function (d) {
+                                            return positions[data.country][0];
+                                        })
+                                        .attr('cy', function (d) {
+                                            return positions[data.country][1];
+                                        });
+                                }
+
+                                // d3.select(this).append('circle')
+                                //     .attr('r', function (d) {
+                                //
+                                //         console.log(d.value);
+                                //
+                                //         return Math.abs(Math.log(Math.abs(d.value) / max_migrations) * 20)
+                                //     })
+                                //     .attr('fill', 'black');
                             })
 
                             .transition()
@@ -154,12 +195,16 @@ function initMap() {
                                     .attr('y1', function (d) {
                                         return positions[d.origin][1];
                                     })
+
+
                             })
                     }).on('mouseout', function (d, i) {
                     // svg.selectAll(`.o${d.id}, .d${d.id}`)
                     svg.selectAll(`.o${d.id}`)
                         .attr('display', 'none')
                         .interrupt();
+
+                    svg.selectAll('.num_refugees').remove();
                 })
             })
     })
@@ -178,7 +223,7 @@ function showMigration(year) {
         .enter().append("line")
         .attr('d', line)
         .attr('class', function (m) {
-            return `migration-line y${year} o${m.origin} d${m.country}`
+            return `no-mouse y${year} o${m.origin} d${m.country}`
         })
         .attr('stroke', "#d64161")
         .attr('display', 'none')

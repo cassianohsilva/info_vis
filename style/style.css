@@ -38,6 +38,12 @@ svg .country:hover {
     stroke-width: .5px;
 }
 
-.migration-line {
+.no-mouse {
     pointer-events: none;
+}
+
+.num_refugees {
+    fill: lightblue;
+    fill-opacity: 0.6;
+    stroke: black;
 }
