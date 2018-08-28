@@ -2,6 +2,18 @@ var countries = {};
 var migration = {};
 var positions = {};
 
+Object.prototype.filter = function (predicate) {
+    var result = {}, key;
+
+    for (key in this) {
+        if (this.hasOwnProperty(key) && !predicate(this[key])) {
+            result[key] = this[key];
+        }
+    }
+
+    return result;
+};
+
 var max_migrations = 0;
 
 var width = 900,
@@ -86,14 +98,64 @@ function initMap() {
                 for (var i in data) {
 
                     if (migration[data[i].year] === undefined) {
-                        migration[data[i].year] = []
+                        migration[data[i].year] = {};
                     }
 
-                    if (data[i].value > max_migrations) {
-                        max_migrations = data[i].value;
+                    var m = migration[data[i].year];
+                    var element = null;
+
+                    // if (m[data[i].origin] === undefined) {
+                    //     m[data[i].origin] = {}
+                    // }
+
+                    if (m[data[i].origin] === undefined) {
+
+                        m[data[i].origin] = [{
+                            dest: data[i].country,
+                            total: data[i].value,
+                            types: [{
+                                type: data[i].type,
+                                value: data[i].value
+                            }]
+                        }];
+
+                        element = m[data[i].origin][m[data[i].origin].length - 1];
+                        // m[data[i].origin][data[i].country] = {
+                        //     total: data[i].value,
+                        //     types: [{
+                        //         type: data[i].type,
+                        //         value: data[i].value
+                        //     }]
+                        // }
+                    } else {
+
+                        element = m[data[i].origin].find(function (el) {
+                            return el.dest === data[i].country;
+                        });
+
+                        if (element !== undefined) {
+                            element.total += data[i].value;
+                            element.types.push({
+                                type: data[i].type,
+                                value: data[i].value
+                            });
+                        } else {
+                            m[data[i].origin].push({
+                                dest: data[i].country,
+                                total: data[i].value,
+                                types: [{
+                                    type: data[i].type,
+                                    value: data[i].value
+                                }]
+                            });
+
+                            element = m[data[i].origin][m[data[i].origin].length - 1];
+                        }
                     }
 
-                    migration[data[i].year].push(data[i]);
+                    if (element.total > max_migrations) {
+                        max_migrations = element.total;
+                    }
                 }
 
                 svg.append("path")
@@ -112,7 +174,6 @@ function initMap() {
                         positions[parseInt(d.id)] = path.centroid(d);
                     }).call(function () {
 
-                    console.log(svg);
                     showMigration(2016);
                 })
                     .on('mouseover', function (d, n) {
@@ -218,25 +279,26 @@ function showMigration(year) {
         return (positions[m.origin] !== undefined) && (positions[m.country] !== undefined);
     });
 
+    // console.log(data);
+
     svg.selectAll('#m' + year)
         .data(data)
         .enter().append("line")
         .attr('d', line)
         .attr('class', function (m) {
+            console.log('aaaa', m);
             return `no-mouse y${year} o${m.origin} d${m.country}`
         })
         .attr('stroke', "#d64161")
         .attr('display', 'none')
         .attr("marker-end", "url(#triangle)");
-
-
 }
 
 function getArc(d, s) {
     var dx = d.destination.x - d.origin.x;
     var dy = d.destination.y - d.origin.y;
     var dr = Math.sqrt(dx * dx + dy * dy);
-    var spath = s == false ? ' 0 0,0 ' : ' 0 0,1 ';
+    var spath = s === false ? ' 0 0,0 ' : ' 0 0,1 ';
     return 'M' + d.origin.x + ',' + d.origin.y + 'A' + dr + ',' + dr + spath + d.destination.x + ',' + d.destination.y;
 }
 
