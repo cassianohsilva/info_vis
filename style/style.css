@@ -32,6 +32,10 @@ svg .country:hover {
     fill: #222;
 }
 
+.migration-line {
+    stroke: #d64161;
+}
+
 .boundary {
     fill: none;
     stroke: #fff;
