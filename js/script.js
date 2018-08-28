@@ -166,6 +166,10 @@ function initMap() {
                     .attr("d", d3.geoPath())
                     .attr('id', 'lines');
 
+                svg.append("path")
+                    .attr("d", d3.geoPath())
+                    .attr('id', 'circles');
+
                 svg.selectAll("#map_path")
                     .data(topojson.feature(world, world.objects.countries).features)
                     .enter().append("path")
@@ -189,6 +193,26 @@ function initMap() {
                             var data = migration[2016][country_data.id].filter(function (m) {
                                 return (positions[m.dest] !== undefined);
                             });
+
+                            svg.selectAll('#circles')
+                                .data(data)
+                                .enter()
+                                .append('circle')
+                                .attr('class', 'num_refugees no-mouse')
+                                .attr('cx', function (d) {
+                                    return positions[d.dest][0];
+                                })
+                                .attr('cy', function (d) {
+                                    return positions[d.dest][1];
+                                })
+                                .attr('r', 0)
+                                .transition()
+                                .ease(d3.easeLinear)
+                                .delay(1000)
+                                .duration(1000)
+                                .attr('r', function (d) {
+                                    return Math.abs(Math.log(Math.abs(d.total) / max_migrations) * 1.5)
+                                });
 
                             svg.selectAll('#lines')
                                 .data(data)
@@ -220,7 +244,7 @@ function initMap() {
                                 })
                                 .transition()
                                 .ease(d3.easeLinear)
-                                .duration(1500)
+                                .duration(1000)
                                 .attr('x1', function (d) {
                                     return positions[d.dest][0];
                                 })
