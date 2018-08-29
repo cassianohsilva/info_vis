@@ -20,12 +20,13 @@ svg {
 }
 
 svg .country {
-    fill: #DDD;
+    /*fill: #DDD;*/
+    fill: white;
     stroke: #000;
 }
 
 svg .country:hover {
-    fill: lightblue;
+    fill: #f84465;
 }
 
 .land {
@@ -36,12 +37,9 @@ svg .country:hover {
     stroke: #d64161;
 }
 
-.boundary {
-    fill: none;
-    stroke: #fff;
-    stroke-width: .5px;
+#sphere {
+    fill: lightblue;
 }
-
 .no-mouse {
     pointer-events: none;
 }
@@ -55,5 +53,4 @@ svg .country:hover {
 .txt-num-refugees {
     stroke: #000;
     fill: #000;
-    /*font-size: 100px;*/
 }
