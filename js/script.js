@@ -2,18 +2,6 @@ var countries = {};
 var migration = {};
 var positions = {};
 
-Object.prototype.filter = function (predicate) {
-    var result = {}, key;
-
-    for (key in this) {
-        if (this.hasOwnProperty(key) && !predicate(this[key])) {
-            result[key] = this[key];
-        }
-    }
-
-    return result;
-};
-
 var max_migrations = 0;
 
 var width = 900,
@@ -109,6 +97,7 @@ function initMap() {
                     if (m[data[i].origin] === undefined) {
 
                         m[data[i].origin] = [{
+                            orig: data[i].origin,
                             dest: data[i].country,
                             total: data[i].value,
                             types: [{
@@ -132,6 +121,7 @@ function initMap() {
                             });
                         } else {
                             m[data[i].origin].push({
+                                orig: data[i].origin,
                                 dest: data[i].country,
                                 total: data[i].value,
                                 types: [{
@@ -155,10 +145,6 @@ function initMap() {
 
                 svg.append("path")
                     .attr("d", d3.geoPath())
-                    .attr('id', 'lines');
-
-                svg.append("path")
-                    .attr("d", d3.geoPath())
                     .attr('id', 'circles');
 
                 svg.selectAll("#map_path")
@@ -172,117 +158,200 @@ function initMap() {
                     .each(function (d, i) {
                         positions[parseInt(d.id)] = path.centroid(d);
                     }).call(function () {
+                    showMigration(2016, 50);
                 })
                     .on('mouseover', function (country_data, n) {
 
-                        if (migration[2016][country_data.id] !== undefined) {
-
-                            var line = d3.line();
-
-                            var data = migration[2016][country_data.id].filter(function (m) {
-                                return (positions[m.dest] !== undefined);
-                            });
-
-                            var circles = svg.selectAll('#circles')
-                                .data(data)
-                                .enter()
-                                .append('g')
-                                .attr('class', 'migration-info');
-
-                            circles
-                                .append('circle')
-                                .attr('class', 'num_refugees no-mouse')
-                                .attr('cx', function (d) {
-                                    return positions[d.dest][0];
-                                })
-                                .attr('cy', function (d) {
-                                    return positions[d.dest][1];
-                                })
-                                .attr('r', 0)
-                                // .append('text')
-                                // .attr('dx', -20)
-                                // circles
-                                .transition()
-                                .ease(d3.easeLinear)
-                                .delay(700)
-                                .duration(700)
-                                .attr('r', function (d) {
-                                    return Math.abs(Math.log(Math.abs(d.total))) * 1.5;
-                                });
-
-                            circles
-                                .append('text')
-                                .attr('x', function (d) {
-                                    return positions[d.dest][0];
-                                })
-                                .attr('y', function (d) {
-                                    return positions[d.dest][1];
-                                })
-                                .attr('class', 'txt-num-refugees')
-                                .text('')
-                                .transition()
-                                .ease(d3.easeLinear)
-                                .delay(700)
-                                .duration(700)
-                                .tween('text', function (d) {
-
-                                    var that = d3.select(this);
-
-                                    return function (t) {
-                                        that.text(parseInt(t * d.total));
-                                    };
-                                });
-
-                            svg.selectAll('#lines')
-                                .data(data)
-                                .enter()
-                                .append('line')
-                                .attr('d', line)
-                                .attr('class', 'no-mouse migration-line')
-                                .attr("marker-end", "url(#triangle)")
-                                .attr('x1', function () {
-                                    return positions[country_data.id][0];
-                                })
-                                .attr('y1', function () {
-                                    return positions[country_data.id][1];
-                                })
-                                .attr('x2', function (d) {
-                                    return positions[country_data.id][0];
-                                })
-                                .attr('y2', function (d) {
-                                    return positions[country_data.id][1];
-                                })
-                                .transition()
-                                .ease(d3.easeLinear)
-                                .duration(700)
-                                .attr('x2', function (d) {
-                                    return positions[d.dest][0];
-                                })
-                                .attr('y2', function (d) {
-                                    return positions[d.dest][1];
-                                })
-                                .transition()
-                                .ease(d3.easeLinear)
-                                .duration(700)
-                                .attr('x1', function (d) {
-                                    return positions[d.dest][0];
-                                })
-                                .attr('y1', function (d) {
-                                    return positions[d.dest][1];
-                                })
-                                // Gambiarra pq o evento 'end' não funciona
-                                .transition()
-                                .duration(1)
-                                .attr('display', 'none');
-                        }
+                        // if (migration[2016][country_data.id] !== undefined) {
+                        //
+                        //     var line = d3.line();
+                        //
+                        //     var data = migration[2016][country_data.id].filter(function (m) {
+                        //         return (positions[m.dest] !== undefined);
+                        //     });
+                        //
+                        //     var circles = svg.selectAll('#circles')
+                        //         .data(data)
+                        //         .enter()
+                        //         .append('g')
+                        //         .attr('class', 'migration-info');
+                        //
+                        //     circles
+                        //         .append('circle')
+                        //         .attr('class', 'num_refugees no-mouse')
+                        //         .attr('cx', function (d) {
+                        //             return positions[d.dest][0];
+                        //         })
+                        //         .attr('cy', function (d) {
+                        //             return positions[d.dest][1];
+                        //         })
+                        //         .attr('r', 0)
+                        //         .transition()
+                        //         .ease(d3.easeLinear)
+                        //         .delay(700)
+                        //         .duration(700)
+                        //         .attr('r', function (d) {
+                        //             return Math.abs(Math.log(Math.abs(d.total))) * 1.5;
+                        //         });
+                        //
+                        //     circles
+                        //         .append('text')
+                        //         .attr('x', function (d) {
+                        //             return positions[d.dest][0];
+                        //         })
+                        //         .attr('y', function (d) {
+                        //             return positions[d.dest][1];
+                        //         })
+                        //         .attr('class', 'txt-num-refugees')
+                        //         .text('')
+                        //         .transition()
+                        //         .ease(d3.easeLinear)
+                        //         .delay(700)
+                        //         .duration(700)
+                        //         .tween('text', function (d) {
+                        //
+                        //             var that = d3.select(this);
+                        //
+                        //             return function (t) {
+                        //                 that.text(parseInt(t * d.total));
+                        //             };
+                        //         });
+                        //
+                        //     svg.selectAll('#lines')
+                        //         .data(data)
+                        //         .enter()
+                        //         .append('line')
+                        //         .attr('d', line)
+                        //         .attr('class', 'no-mouse migration-line')
+                        //         .attr("marker-end", "url(#triangle)")
+                        //         .attr('x1', function () {
+                        //             return positions[country_data.id][0];
+                        //         })
+                        //         .attr('y1', function () {
+                        //             return positions[country_data.id][1];
+                        //         })
+                        //         .attr('x2', function (d) {
+                        //             return positions[country_data.id][0];
+                        //         })
+                        //         .attr('y2', function (d) {
+                        //             return positions[country_data.id][1];
+                        //         })
+                        //         .transition()
+                        //         .ease(d3.easeLinear)
+                        //         .duration(700)
+                        //         .attr('x2', function (d) {
+                        //             return positions[d.dest][0];
+                        //         })
+                        //         .attr('y2', function (d) {
+                        //             return positions[d.dest][1];
+                        //         })
+                        //         .transition()
+                        //         .ease(d3.easeLinear)
+                        //         .duration(700)
+                        //         .attr('x1', function (d) {
+                        //             return positions[d.dest][0];
+                        //         })
+                        //         .attr('y1', function (d) {
+                        //             return positions[d.dest][1];
+                        //         })
+                        //         // Gambiarra pq o evento 'end' não funciona
+                        //         .transition()
+                        //         .duration(1)
+                        //         .attr('display', 'none');
+                        // }
                     }).on('mouseout', function (d, i) {
-                    svg.selectAll('.migration-line')
-                        .remove();
-
-                    svg.selectAll('.migration-info').remove();
+                    // svg.selectAll('.migration-line')
+                    //     .remove();
+                    //
+                    // svg.selectAll('.migration-info').remove();
                 })
             })
     })
+}
+
+function shuffleArray(array) {
+
+    var temp = array;
+
+    for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        temp[i] = array[j];
+        temp[j] = array[i];
+    }
+
+    return temp;
+}
+
+function showMigration(year, n_slices) {
+
+    var duration = 2000;
+    var slice = Object.keys(migration[year]).length / n_slices;
+
+    var keys = shuffleArray(Object.keys(migration[year]));
+
+    var sum = 0;
+
+    for (var i = 0; i < n_slices; i++) {
+        var ids = keys.slice(i * slice, (i + 1) * slice);
+
+        var line = d3.line();
+
+        var data = [];
+
+        sum += ids.length;
+
+        for (var j in ids) {
+            data = data.concat(migration[year][ids[j]].filter(function (m) {
+                return (m.orig !== m.dest)
+                    && (positions[m.orig] !== undefined)
+                    && (positions[m.dest] !== undefined);
+            }));
+        }
+
+        svg.append("path")
+            .attr("d", d3.geoPath())
+            .attr('id', `flow_${year}_${i}`);
+
+        svg.selectAll(`flow_${year}_${i}`)
+            .data(data)
+            .enter()
+            .append('line')
+            .attr('d', line)
+            .attr('class', 'no-mouse migration-line')
+            // .attr("marker-end", "url(#triangle)")
+            .attr('x1', function (d) {
+                return positions[d.orig][0];
+            })
+            .attr('y1', function (d) {
+                return positions[d.orig][1];
+            })
+            .attr('x2', function (d) {
+                return positions[d.orig][0];
+            })
+            .attr('y2', function (d) {
+                return positions[d.orig][1];
+            })
+            .transition()
+            .delay(i * 1.5 * duration)
+            .ease(d3.easeLinear)
+            .duration(duration)
+            .attr('x2', function (d) {
+                return positions[d.dest][0];
+            })
+            .attr('y2', function (d) {
+                return positions[d.dest][1];
+            })
+            .transition()
+            .ease(d3.easeLinear)
+            .duration(duration)
+            .attr('x1', function (d) {
+                return positions[d.dest][0];
+            })
+            .attr('y1', function (d) {
+                return positions[d.dest][1];
+            })
+            .remove();
+    }
 }
 
 function getArc(d, s) {
