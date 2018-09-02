@@ -4,19 +4,33 @@
 <head title="Refugees around the world">
 
     <meta charset="utf-8">
-    <script src="https://d3js.org/d3.v5.min.js"></script>
-    <script src="https://unpkg.com/topojson@3"></script>
-    <script src="https://d3js.org/d3-geo.v1.min.js"></script>
+    <!--<script src="https://d3js.org/d3.v5.min.js"></script>-->
+    <!--<script src="https://unpkg.com/topojson@3"></script>-->
+    <!--<script src="https://d3js.org/d3-geo.v1.min.js"></script>-->
+
     <!--<script src="node_modules/d3/dist/d3.min.js"></script>-->
-    <!--<script src="node_modules/topojson/dist/topojson.min.js"></script>-->
+    <script src="node_modules/datamaps/node_modules/d3/d3.min.js"></script>
+    <script src="node_modules/datamaps/node_modules/topojson/build/topojson.min.js"></script>
     <!--<script src="node_modules/d3-geo/dist/d3-geo.min.js"></script>-->
+    <script src="node_modules/datamaps/dist/datamaps.all.min.js"></script>
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+
+    <!--<script src="node_modules/datamaps/dist/datamaps.world.min.js"></script>-->
+
 
     <link href="style/style.css" rel="stylesheet" type="text/css"/>
 
 </head>
 
 <body>
+<div id="container" style="position: relative; margin: 0 auto; width: 1000px; height: 600px;"></div>
 
-<script src="js/script.js"></script>
+<button class="zoom-button" data-zoom="reset">0</button>
+<button class="zoom-button" data-zoom="out">-</button>
+<button class="zoom-button" data-zoom="in">+</button>
+<!--<div id="zoom-info"></div>-->
+
+<script src="js/zoom.js"></script>
+<script src="js/script2.js"></script>
 </body>
 </html>

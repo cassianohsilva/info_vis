@@ -54,8 +54,8 @@ function initMap() {
         .attr("class", "graticule")
         .attr("d", path);
 
-    // d3.tsv("node_modules/world-atlas/world/110m.tsv").then(function (c) {
-    d3.tsv("https://unpkg.com/world-atlas@1/world/110m.tsv").then(function (c) {
+    d3.tsv("node_modules/world-atlas/world/110m.tsv").then(function (c) {
+        // d3.tsv("https://unpkg.com/world-atlas@1/world/110m.tsv").then(function (c) {
 
         for (let i in c) {
             countries[c[i]['iso_n3']] = c[i];
@@ -66,8 +66,8 @@ function initMap() {
         Promise.all([
             d3.csv("data/dataset.csv"),
             d3.csv("data/types.csv"),
-            d3.json("https://unpkg.com/world-atlas@1/world/110m.json")
-            // d3.json("node_modules/world-atlas/world/110m.json")
+            // d3.json("https://unpkg.com/world-atlas@1/world/110m.json")
+            d3.json("node_modules/world-atlas/world/110m.json")
         ])
             .then(function (v) {
 
