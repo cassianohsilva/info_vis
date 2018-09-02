@@ -13,24 +13,27 @@
     <script src="node_modules/datamaps/node_modules/topojson/build/topojson.min.js"></script>
     <!--<script src="node_modules/d3-geo/dist/d3-geo.min.js"></script>-->
     <script src="node_modules/datamaps/dist/datamaps.all.min.js"></script>
+    <script src="node_modules/datamaps/node_modules/d3-queue/build/d3-queue.min.js"></script>
     <script src="node_modules/jquery/dist/jquery.min.js"></script>
 
-    <!--<script src="node_modules/datamaps/dist/datamaps.world.min.js"></script>-->
-
+    <script>
+        d3.queue = d3_queue.queue;
+    </script>
 
     <link href="style/style.css" rel="stylesheet" type="text/css"/>
 
 </head>
 
 <body>
-<div id="container" style="position: relative; margin: 0 auto; width: 1000px; height: 600px;"></div>
+<div id="container" style="position: relative; margin: 0 auto; width: 1000px; height: 700px;"></div>
 
-<button class="zoom-button" data-zoom="reset">0</button>
+
 <button class="zoom-button" data-zoom="out">-</button>
+<button class="zoom-button" data-zoom="reset">0</button>
 <button class="zoom-button" data-zoom="in">+</button>
 <!--<div id="zoom-info"></div>-->
 
 <script src="js/zoom.js"></script>
-<script src="js/script2.js"></script>
+<script src="js/script.js"></script>
 </body>
 </html>
