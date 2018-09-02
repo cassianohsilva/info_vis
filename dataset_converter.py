@@ -37,68 +37,68 @@ def main():
 		header='infer',
 		delimiter='\t')
 
-	df2.set_index('iso_n3', inplace=True)
+	# df2.set_index('iso_n3', inplace=True)
+	df2.set_index('iso_a3', inplace=True)
 
 	misc = {
 		# Countries with different names
-		"Bolivia (Plurinational State of)": 68,
-		"Central African Rep.": 140,
-		"China, Hong Kong SAR": 344,
-		"China, Macao SAR": 446,
-		"Congo": 178,
-		"Czech Rep.": 203,
-		"Dem. People's Rep. of Korea": 408,
-		"Dem. Rep. of the Congo": 180,
-		"Dominican Rep.": 214,
-		"Gambia": 270,
-		"Iran (Islamic Rep. of)": 364,
-		"Lao People's Dem. Rep.": 418,
-		"Micronesia (Federated States of)": 584,
-		"Rep. of Korea": 410,
-		"Rep. of Moldova": 498 ,
-		"Serbia and Kosovo (S/RES/1244 (1999))": 688,
-		"Sint Maarten (Dutch part)": 534,
-		"State of Palestine": 275,
-		"Palestinian": 275,
-		"Syrian Arab Rep.": 760,
-		"The former Yugoslav Republic of Macedonia": 807,
-		"United Rep. of Tanzania": 834,
-		"United States of America": 840,
-		"Venezuela (Bolivarian Republic of)": 862,
-		"Viet Nam": 704,
+		"Bolivia (Plurinational State of)": 'BOL',
+		"Central African Rep.": 'CAF',
+		"China, Hong Kong SAR": 'HKG',
+		"China, Macao SAR": 'MAC',
+		"Congo": 'COG',
+		"Czech Rep.": 'CZE',
+		"Dem. People's Rep. of Korea": 'PRK',
+		"Dem. Rep. of the Congo": 'COD',
+		"Dominican Rep.": 'DOM',
+		"Gambia": 'GMB',
+		"Iran (Islamic Rep. of)": 'IRN',
+		"Lao People's Dem. Rep.": 'LAO',
+		"Micronesia (Federated States of)": 'FSM',
+		"Rep. of Korea": 'KOR',
+		"Rep. of Moldova": 'MDA' ,
+		"Serbia and Kosovo (S/RES/1244 (1999))": 'SRB',
+		"Sint Maarten (Dutch part)": 'SXM',
+		"State of Palestine": 'PSE',
+		"Palestinian": 'PSE',
+		"Syrian Arab Rep.": 'SYR',
+		"The former Yugoslav Republic of Macedonia": 'MKD',
+		"United Rep. of Tanzania": 'TZA',
+		"United States of America": 'USA',
+		"Venezuela (Bolivarian Republic of)": 'VEN',
+		"Viet Nam": 'VNM',
 
-		# Countries that not appear
-		"Bonaire" : 0,
-		"Cabo Verde" : 0,
-		"French Guiana": 0,
-		"Gibraltar": 0,
-		"Guadeloupe": 0,
-		"Holy See (the)": 0,
-		"Martinique": 0,
-		"Saint-Pierre-et-Miquelon": 0,
-		"Sao Tome and Principe": 0,
-		"Svalbard and Jan Mayen": 0,
-		"Tibetan": 0,
-		"Tuvalu": 0,
-		"Wallis and Futuna Islands ": 0,
+		"Bonaire" : '',
+		"Cabo Verde" : 'CPV',
+		"French Guiana": '',
+		"Gibraltar": '',
+		"Guadeloupe": '',
+		"Holy See (the)": '',
+		"Martinique": '',
+		"Saint-Pierre-et-Miquelon": '',
+		"Sao Tome and Principe": '',
+		"Svalbard and Jan Mayen": '',
+		"Tibetan": '',
+		"Tuvalu": '',
+		"Wallis and Futuna Islands": '',
 
 		# Unkown origins
-		"Stateless": -1,
-		"Various/Unknown": -2,
+		"Stateless": '0',
+		"Various/Unknown": '1'
 	}
 
 	countries = np.unique([df['country'], df['origin']])
 
 	df3 = pd.DataFrame(columns=['id', 'name'], dtype='str')
-	df3['id'] = df3['id'].astype(int)
+	# df3['id'] = df3['id'].astype(int)
 
 	for i in countries:
 
 		row = df2[df2.name_long == i]
 
-		t = [[row.index[0] if row.shape[0] > 0 else 0, i]]
+		t = [[row.index[0] if row.shape[0] > 0 else '', i]]
 
-		if t[0][0] <= 0:
+		if len(t[0][0]) == 0:
 			t[0] = [ misc[t[0][1]], t[0][1] ]
 			
 		temp = pd.DataFrame(
@@ -118,11 +118,8 @@ def main():
 	df['country'] = df['country'].replace(to_replace=names, value=ids)
 	df['origin'] = df['origin'].replace(to_replace=names, value=ids)
 
-	df['country'] = df['country'].astype(int)
-	df['origin'] = df['origin'].astype(int)
-
-	df = df[df.country != 0]
-	df = df[df.origin != 0]
+	df = df[df.country != '']
+	df = df[df.origin != '']
 
 	df['type'] = df['type'].replace(to_replace=df4['name'].tolist(), value=df4['id'].tolist())
 
