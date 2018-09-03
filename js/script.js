@@ -15,12 +15,13 @@ function Datamap() {
         element: this.$container.get(0),
         projection: 'equirectangular',
         fills: {
-            defaultFill: '#dddddd'
+            defaultFill: '#add8e6'
         },
         done: this._handleMapReady.bind(this),
-        // geographyConfig: {
-        //     hideAntarctica: false
-        // }
+        geographyConfig: {
+            borderColor: 'white',
+            // hideAntarctica: false
+        }
     });
 }
 

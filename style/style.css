@@ -1,5 +1,5 @@
 svg {
-    border: 1px solid black;
+    /*border: 1px solid black;*/
 }
 
 .stroke {
@@ -61,7 +61,7 @@ svg .country:hover {
 #container {
     margin-bottom: 5px;
     overflow: hidden;
-    border: 2px solid silver;
+    /*border: 2px solid silver;*/
     border-radius: 6px;
     background: white;
 }
