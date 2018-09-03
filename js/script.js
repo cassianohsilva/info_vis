@@ -32,9 +32,13 @@ Datamap.prototype._handleMapReady = function (datamap) {
     });
 };
 
+initSlider('#years');
+
 var map = new Datamap().instance;
 var svg = map.svg;
 var path = map.path;
+
+
 
 svg.selectAll('.datamaps-subunit').each(function (data) {
     positions[data.id] = map.projection.invert(path.centroid(data));
@@ -124,7 +128,7 @@ svg.selectAll('.datamaps-subunit').on('click', function (data) {
 
     var arcs = [];
 
-    if(migration[2016][data.id] !== undefined) {
+    if (migration[2016][data.id] !== undefined) {
         arcs = migration[2016][data.id].map(function (el) {
             if (positions[data.id] === undefined
                 || positions[el.dest] === undefined
@@ -150,3 +154,20 @@ svg.selectAll('.datamaps-subunit').on('click', function (data) {
     map.arc(arcs);
 });
 
+
+function initSlider(selector) {
+
+    data = [];
+
+    for (var i = 1995; i <= 2017; i++) {
+        data.push(i);
+    }
+
+    $(selector).slider({
+        ticks: data,
+        ticks_labels: data.map(function (el) {
+            return `${el}`;
+        })
+    });
+
+}

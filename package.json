@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.html",
   "dependencies": {
+    "bootstrap": "^3.3.7",
+    "bootstrap-slider": "^10.2.0",
     "d3": "^5.5.0",
     "d3-geo": "^1.10.0",
     "d3.js": "0.0.2-security",
