@@ -25,6 +25,9 @@ function Datamap() {
             highlightFillColor: '#fca982',
             highlightOnHover: false,
             // hideAntarctica: false
+        },
+        arcConfig: {
+            strokeWidth: 0.45,
         }
     });
 }
@@ -36,12 +39,11 @@ Datamap.prototype._handleMapReady = function (datamap) {
     });
 };
 
-initSlider('#years');
-
 var map = new Datamap().instance;
 var svg = map.svg;
 var path = map.path;
-
+var slider = initSlider('#years');
+var selectedCountry = null;
 
 svg.selectAll('.datamaps-subunit').each(function (data) {
     positions[data.id] = map.projection.invert(path.centroid(data));
@@ -121,17 +123,22 @@ svg.selectAll('.datamaps-subunit').each(function (data) {
             });
     });
 
-svg.selectAll('.datamaps-subunit').on('click', function (data) {
+svg.selectAll('.datamaps-subunit').on('click', displayMigration);
+
+function displayMigration(data) {
+
+    selectedCountry = this;
 
     if (missing[data.properties.name] !== undefined) {
         data.id = missing[i].id;
     }
 
+    var year = slider.slider('getValue');
     var arcs = [];
     var destinations = [];
 
-    if (migration[2016][data.id] !== undefined) {
-        arcs = migration[2016][data.id].map(function (el) {
+    if (migration[year][data.id] !== undefined) {
+        arcs = migration[year][data.id].map(function (el) {
             if (positions[data.id] === undefined
                 || positions[el.dest] === undefined
                 || positions[data.id] === positions[el.dest]) {
@@ -170,7 +177,7 @@ svg.selectAll('.datamaps-subunit').on('click', function (data) {
     map.updateChoropleth(temp, {reset: true});
 
     map.arc(arcs);
-});
+}
 
 
 function initSlider(selector) {
@@ -186,7 +193,12 @@ function initSlider(selector) {
         ticks_labels: data.map(function (el) {
             return `${el}`;
         })
+    }).on('change', function () {
+        if (selectedCountry) {
+            d3.select(selectedCountry).each(displayMigration);
+        }
     });
 
+    return $(selector);
 }
 
