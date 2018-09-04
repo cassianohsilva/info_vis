@@ -24,6 +24,23 @@ function Datamap() {
             borderColor: 'white',
             highlightFillColor: '#fca982',
             highlightOnHover: false,
+            popupTemplate: function (geo, data) {
+
+                var emigration = '';
+                var immigration = '';
+
+                if (data.emigration > 0) {
+                    emigration = `<br>Number of emigrants: ${data.emigration}`;
+                }
+
+                if (data.total > 0) {
+                    immigration = `<br>Number of ${ data.emigration > 0 ? 'internal' : '' } immigrants: ${data.total}`;
+                } else if (data.total < 0) {
+                    immigration = `<br>Number of ${ data.emigration > 0 ? 'internal' : '' } immigrants: 1 - 4`;
+                }
+
+                return `<div class="hoverinfo"><strong>${geo.properties.name}${emigration}${immigration}</strong></div>`;
+            }
             // hideAntarctica: false
         },
         arcConfig: {
@@ -81,7 +98,7 @@ svg.selectAll('.datamaps-subunit').each(function (data) {
                         m[data[i].origin] = [{
                             orig: data[i].origin,
                             dest: data[i].country,
-                            total: data[i].value,
+                            total: Math.abs(data[i].value),
                             types: [{
                                 type: data[i].type,
                                 value: data[i].value
@@ -96,7 +113,7 @@ svg.selectAll('.datamaps-subunit').each(function (data) {
                         });
 
                         if (element !== undefined) {
-                            element.total += data[i].value;
+                            element.total += Math.abs(data[i].value);
                             element.types.push({
                                 type: data[i].type,
                                 value: data[i].value
@@ -105,7 +122,7 @@ svg.selectAll('.datamaps-subunit').each(function (data) {
                             m[data[i].origin].push({
                                 orig: data[i].origin,
                                 dest: data[i].country,
-                                total: data[i].value,
+                                total: Math.abs(data[i].value),
                                 types: [{
                                     type: data[i].type,
                                     value: data[i].value
@@ -127,6 +144,8 @@ svg.selectAll('.datamaps-subunit').on('click', displayMigration);
 
 function displayMigration(data) {
 
+    map.updateChoropleth(null, {reset: true});
+
     selectedCountry = this;
 
     if (missing[data.properties.name] !== undefined) {
@@ -135,17 +154,37 @@ function displayMigration(data) {
 
     var year = slider.slider('getValue');
     var arcs = [];
-    var destinations = [];
+    var temp = {};
+    var totalEmigration = 0;
 
     if (migration[year][data.id] !== undefined) {
         arcs = migration[year][data.id].map(function (el) {
+
             if (positions[data.id] === undefined
                 || positions[el.dest] === undefined
-                || positions[data.id] === positions[el.dest]) {
+                || positions[data.id] === positions[el.dest]
+                || el.total === 0) {
+
+                if ((positions[data.id] === positions[el.dest]) && el.total !== 0) {
+                    temp[el.dest] = {
+                        fillKey: 'ORIGIN',
+                        total: el.total,
+                        types: el.types
+                    };
+
+                    totalEmigration += Math.abs(el.total);
+                }
+
                 return undefined;
             }
 
-            destinations.push(el.dest);
+            totalEmigration += Math.abs(el.total);
+
+            temp[el.dest] = {
+                fillKey: 'DESTINATION',
+                total: el.total,
+                types: el.types
+            };
 
             return {
                 origin: {
@@ -162,19 +201,16 @@ function displayMigration(data) {
         });
     }
 
-    var temp = {};
+    if (!temp[data.id]) {
+        temp[data.id] = {
+            fillKey: 'ORIGIN',
+            emigration: totalEmigration
+        }
+    } else {
+        temp[data.id].emigration = totalEmigration;
+    }
 
-    destinations.forEach(function (el) {
-        temp[el] = {
-            fillKey: 'DESTINATION'
-        };
-    });
-
-    temp[data.id] = {
-        fillKey: 'ORIGIN'
-    };
-
-    map.updateChoropleth(temp, {reset: true});
+    map.updateChoropleth(temp);
 
     map.arc(arcs);
 }
