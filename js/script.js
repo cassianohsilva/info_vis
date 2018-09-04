@@ -15,11 +15,15 @@ function Datamap() {
         element: this.$container.get(0),
         projection: 'equirectangular',
         fills: {
-            defaultFill: '#add8e6'
+            ORIGIN: '#fb8650',
+            DESTINATION: '#63b4cf',
+            defaultFill: '#add8e6',
         },
         done: this._handleMapReady.bind(this),
         geographyConfig: {
             borderColor: 'white',
+            highlightFillColor: '#fca982',
+            highlightOnHover: false,
             // hideAntarctica: false
         }
     });
@@ -39,7 +43,6 @@ var svg = map.svg;
 var path = map.path;
 
 
-
 svg.selectAll('.datamaps-subunit').each(function (data) {
     positions[data.id] = map.projection.invert(path.centroid(data));
 })
@@ -52,8 +55,6 @@ svg.selectAll('.datamaps-subunit').each(function (data) {
                 if (error) {
                     console.log('Error');
                 }
-
-                console.log(v);
 
                 var data = v[0],
                     types = v[1];
@@ -127,6 +128,7 @@ svg.selectAll('.datamaps-subunit').on('click', function (data) {
     }
 
     var arcs = [];
+    var destinations = [];
 
     if (migration[2016][data.id] !== undefined) {
         arcs = migration[2016][data.id].map(function (el) {
@@ -135,6 +137,8 @@ svg.selectAll('.datamaps-subunit').on('click', function (data) {
                 || positions[data.id] === positions[el.dest]) {
                 return undefined;
             }
+
+            destinations.push(el.dest);
 
             return {
                 origin: {
@@ -151,13 +155,27 @@ svg.selectAll('.datamaps-subunit').on('click', function (data) {
         });
     }
 
+    var temp = {};
+
+    destinations.forEach(function (el) {
+        temp[el] = {
+            fillKey: 'DESTINATION'
+        };
+    });
+
+    temp[data.id] = {
+        fillKey: 'ORIGIN'
+    };
+
+    map.updateChoropleth(temp, {reset: true});
+
     map.arc(arcs);
 });
 
 
 function initSlider(selector) {
 
-    data = [];
+    var data = [];
 
     for (var i = 1995; i <= 2017; i++) {
         data.push(i);
@@ -171,3 +189,4 @@ function initSlider(selector) {
     });
 
 }
+

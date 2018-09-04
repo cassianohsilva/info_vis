@@ -75,6 +75,14 @@ svg .country:hover {
     cursor: pointer;
 }
 
+.datamaps-arc {
+    pointer-events: none;
+}
+
+.datamaps-subunit:hover {
+    fill: #fca982 !important;
+}
+
 #zoom-info {
     display: inline-block;
     padding: 10px;
